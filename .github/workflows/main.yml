@@ -32,7 +32,7 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: 18
+        node-version: 20
 
     - name: Install Dependencies
       run: npm ci
@@ -50,7 +50,7 @@ jobs:
         DB_NAME: ${{ secrets.DB_NAME }}
 
     - name: Wait for API to be ready
-      run: npx wait-on http://localhost:3000 --timeout 30000
+      run: npx wait-on http://localhost:3000 --timeout 60000
 
     - name: Run Playwright Tests
       run: npx playwright test
