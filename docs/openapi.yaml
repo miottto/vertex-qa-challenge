@@ -1,0 +1,83 @@
+openapi: 3.0.0
+info:
+  title: Vertex Financial API
+  description: Core Banking API for Instant Payments (PIX)
+  version: 1.0.0
+servers:
+  - url: http://localhost:4010
+    description: Local Mock Server
+
+paths:
+  # Route 1: Authenticate
+  /auth/login:
+    post:
+      summary: Authenticate to Vertex System
+      operationId: loginUser
+      responses:
+        '200':
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: "vertex_token_secure_123"
+
+  # Route 2: Check Balance
+  /account/balance:
+    get:
+      summary: Get current account balance
+      responses:
+        '200':
+          description: Balance retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  balance:
+                    type: number
+                    example: 50000.00
+                  currency:
+                    type: string
+                    example: "BRL"
+
+  # Route 3: Complete PIX transaction
+  /pix/transactions:
+    post:
+      summary: Send a PIX payment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - key
+                - amount
+              properties:
+                key:
+                  type: string
+                  example: "email@example.com"
+                amount:
+                  type: number
+                  example: 1500.50
+                description:
+                  type: string
+                  example: "Payment - IT Service"
+      responses:
+        '201':
+          description: PIX Processed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  transactionId:
+                    type: string
+                    example: "tx_vertex_998877"
+                  status:
+                    type: string
+                    example: "COMPLETED"
