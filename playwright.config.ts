@@ -12,7 +12,7 @@ export default defineConfig({
   // SERVER ORCHESTRATION
   webServer: {
     command: 'npx ts-node server.ts', 
-    url: 'http://localhost:3000',     
+    url: 'http://127.0.0.1:3000',     
     reuseExistingServer: !process.env.CI, // Locally, use the one you started. In CI, start a new one.
     stdout: 'pipe',
     stderr: 'pipe',
@@ -20,7 +20,7 @@ export default defineConfig({
   },
 
   use: {
-    baseURL: 'http://localhost:3000',
+    baseURL: 'http://127.0.0.1:3000',
     trace: 'on-first-retry',
   },
 

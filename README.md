@@ -80,7 +80,7 @@ The project follows a modular architecture designed for maintainability:
 
 ### 1. Prerequisites
 
-* Node.js (v16+)
+* Node.js (v20+)
 * Docker & Docker Compose
 
 ### 2. Setup
