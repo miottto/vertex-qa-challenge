@@ -10,6 +10,7 @@ jobs:
   test:
     timeout-minutes: 10
     runs-on: ubuntu-latest
+
     services:
       postgres:
         image: postgres:13-alpine
@@ -39,18 +40,6 @@ jobs:
 
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
-
-    - name: Start Backend API
-      run: npx ts-node server.ts &
-      env:
-        DB_HOST: localhost
-        DB_PORT: 5432
-        DB_USER: ${{ secrets.DB_USER }}
-        DB_PASS: ${{ secrets.DB_PASS }}
-        DB_NAME: ${{ secrets.DB_NAME }}
-
-    - name: Wait for API to be ready
-      run: npx wait-on http://localhost:3000 --timeout 60000
 
     - name: Run Playwright Tests
       run: npx playwright test
