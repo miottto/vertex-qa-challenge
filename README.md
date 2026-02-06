@@ -4,7 +4,7 @@
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
 ![Playwright](https://img.shields.io/badge/Playwright-45ba4b?style=for-the-badge&logo=Playwright&logoColor=white)
-![GitHub Actions](https://img.shields.io/badge/CI%2FCD-2088FF?style=for-the-badge&logo=github-actions&logoColor=white)
+![Vertex QA Pipeline](https://github.com/miottto/vertex-qa-challenge/actions/workflows/main.yml/badge.svg)
 
 ## 🎯 Context & Objective
 
@@ -36,9 +36,15 @@ Instead of automating a UI against a black box, I built the entire stack (Databa
 
 ---
 
-## 🏗️ Architecture Diagram
+## 🏗️ Architecture & Orchestration
 
-The system implements a local micro-environment where the Test Runner (Playwright) validates both the Application Layer (API) and the Data Layer (DB).
+The system implements a **Framework-Driven Architecture**. 
+
+Unlike traditional setups where the CI pipeline manages processes loosely, here **Playwright acts as the Orchestrator**. via the `webServer` configuration, it manages the entire lifecycle:
+1.  **Spawns** the Node.js API process before tests begin.
+2.  **Waits** for the HTTP Health Check (`/`) to return 200 OK.
+3.  **Executes** the E2E suite against the fresh instance.
+4.  **Teardowns** the API process gracefully after execution.
 
 ```mermaid
 graph LR
@@ -51,16 +57,17 @@ graph LR
     end
 
     subgraph QALayer [QA Layer]
-        PW["🎭 Playwright"]
+        PW["🎭 Playwright (Orchestrator)"]
     end
 
-    PW --> |"1. POST /pix"| API
-    API --> |"2. INSERT"| DB
-    DB --> |"3. COMMIT"| API
-    API --> |"4. HTTP 201"| PW
+    PW --> |"1. Spawns & Waits"| API
+    PW --> |"2. POST /pix"| API
+    API --> |"3. INSERT"| DB
+    DB --> |"4. COMMIT"| API
+    API --> |"5. HTTP 201"| PW
     
     %% Engineering Merit (Dotted Line):
-    PW -.-> |"5. SQL Verification"| DB
+    PW -.-> |"6. SQL Verification"| DB
 ```
 ## 📂 Project Structure
 
@@ -76,31 +83,26 @@ The project follows a modular architecture designed for maintainability:
 └── tsconfig.json       # TypeScript Configuration
 ```
 
-## ▶️ How to Run 
+### ▶️ How to Run 
 
 ### 1. Prerequisites
-
 * Node.js (v20+)
 * Docker & Docker Compose
 
 ### 2. Setup
 ```bash
+# Install dependencies and the required browser binary
 npm install
 npx playwright install chromium
 ```
-
-### 3. Start Infrastructure
-This command spins up the PostgreSQL container and sets up the schema automatically.
+### 3. Start Database
+Spin up the sterile PostgreSQL container. The schema is applied automatically.
 ```bash
 docker-compose up -d
 ```
-### 4. Run Tests
-This will start the Node.js Backend and execute the Playwright test suite.
+### 4. Run Tests (One-Step Execution)
+You do not need to start the backend manually. Playwright will automatically spin up the `server.ts` API, wait for port 3000 to be ready, run the tests, and close the server.
 ```bash
-# Terminal 1: Start Backend API
-npx ts-node server.ts
-
-# Terminal 2: Run Automation
 npx playwright test
 ```
 
