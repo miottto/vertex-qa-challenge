@@ -91,8 +91,12 @@ app.get('/account/balance', (req, res) => {
     });
 });
 
+app.get('/', (req, res) => {
+    res.status(200).send('Vertex API is running');
+});
+
 // Start the Server
-app.listen(PORT, async () => {
+app.listen(Number(PORT), '0.0.0.0', async () => {
     await initDB(); 
-    console.log(`Vertex Real API running at http://localhost:${PORT}`);
+    console.log(`🚀 Vertex Real API running at http://0.0.0.0:${PORT}`);
 });
