@@ -86,17 +86,17 @@ app.post('/pix/transactions', async (req, res) => {
 // --- ACCOUNT BALANCE ROUTE ---
 app.get('/account/balance', (req, res) => {
     res.status(200).json({
-        balance: 10000.00,
+        balance: 50000.00,
         currency: "BRL"
     });
 });
 
 app.get('/', (req, res) => {
-    res.status(200).send('Vertex API is running');
+    res.status(200).send('Vertex API is ready.');
 });
 
 // Start the Server
 app.listen(Number(PORT), '0.0.0.0', async () => {
     await initDB(); 
-    console.log(`🚀 Vertex Real API running at http://0.0.0.0:${PORT}`);
+    console.log(`Vertex Real API running at http://0.0.0.0:${PORT}`);
 });
